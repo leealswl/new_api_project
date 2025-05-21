@@ -1,6 +1,5 @@
 [build]
-  publish   = "news"  
+  publish   = "news"                
   functions = "netlify/functions"
-
 [dev]
   functions = "netlify/functions"
