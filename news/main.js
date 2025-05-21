@@ -31,17 +31,16 @@ function openSearchBox() {
 
 async function getNews() {
   try {
-    const url = isLocal
-    ? new URL(baseUrl) // 로컬일 땐 이미 querystring 포함
-    : new URL(baseUrl, window.location.origin);
+    const fetchUrl = isLocal
+      ? new URL(baseUrl)                              
+      : new URL(baseUrl, window.location.origin);   
 
-  // 페이지네이션 파라미터 추가
-  url.searchParams.set("page", page);
-  url.searchParams.set("pageSize", pageSize);
+    // pagination
+    fetchUrl.searchParams.set("page", page);
+    fetchUrl.searchParams.set("pageSize", pageSize);
 
-  const res = await fetch(url);
-  const data = await (isLocal ? res.json() : res.json());
-  console.log("응답 데이터 확인:", data);
+    const res = await fetch(fetchUrl);
+    const data = await res.json();
 
   if (res.status === 200 && Array.isArray(data.articles)) {
     if (!data.articles.length) throw new Error("No results");
@@ -64,7 +63,7 @@ function render() {
     <div class="row news-data">
       <div class="col-lg-4">
         <a class="urlImgTag" href="${item.url}" target="_blank">
-          <img class="thumbnails" src="${item.urlToImage || './image/notlmage.png'}" />
+          <img class="thumbnails" src="${item.urlToImage || '../image/notImage.png'}" />
         </a>
       </div>
       <div class="col-lg-8 news-title">
@@ -166,10 +165,7 @@ document.querySelectorAll(".menus button")
   .forEach(btn =>
     btn.addEventListener("click", e => {
       const category = e.target.textContent.toLowerCase();
-      url = new URL(
-        `/.netlify/functions/getNews?country=us&category=${category}`,
-        window.location.origin
-      );
+      baseUrl = `/.netlify/functions/getNews?country=us&category=${category}`;
       page = 1;
       getNews();
     })
