@@ -9,7 +9,7 @@ exports.handler = async (event) => {
     pageSize
   } = event.queryStringParameters || {};
 
-  const apiKey = import.meta.env.VITE_NEWS_API_KEY;
+  const apiKey = "dfa5549770ab47b7921b3ae0763768df";
   const url = new URL("https://newsapi.org/v2/top-headlines");
 
   url.searchParams.set("apiKey", apiKey);

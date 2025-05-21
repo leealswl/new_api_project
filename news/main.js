@@ -1,4 +1,4 @@
-const API_KEY=import.meta.env.VITE_NEWS_API_KEY;
+const API_KEY = "dfa5549770ab47b7921b3ae0763768df";
 // aba0666514534ea79d87736c79641bcd
 //dfa5549770ab47b7921b3ae0763768df 내꺼
 let newsList=[]
@@ -141,7 +141,7 @@ const render=()=>{
   `<div class="row news-data">
   <div class="col-lg-4">
     <a class="urlImgTag" href="${item.url}" target="_blank"> 
-     <img class="thumbnails" src="${item.urlToImage || 'image/notlmage.png'}" />
+     <img class="thumbnails" src="${item.urlToImage || '/image/notlmage.png'}" />
      </a>
   </div>
   <div class="col-lg-8 news-title">
