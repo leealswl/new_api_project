@@ -1,4 +1,4 @@
-const API_KEY='dfa5549770ab47b7921b3ae0763768df'
+const API_KEY=import.meta.env.VITE_NEWS_API_KEY;
 // aba0666514534ea79d87736c79641bcd
 //dfa5549770ab47b7921b3ae0763768df 내꺼
 let newsList=[]
