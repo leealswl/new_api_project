@@ -1,3 +1,14 @@
+const isLocal = window.location.hostname === "localhost";
+let baseUrl;
+
+if (isLocal) {
+  const API_KEY = "dfa5549770ab47b7921b3ae0763768df";
+  baseUrl = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`;
+} else {
+  baseUrl = "/.netlify/functions/getNews?country=us";
+}
+
+
 let newsList = [];
 let page = 1;
 const pageSize = 10;
@@ -20,30 +31,32 @@ function openSearchBox() {
 
 async function getNews() {
   try {
-    url.searchParams.set("page", page);
-    url.searchParams.set("pageSize", pageSize);
+    const url = isLocal
+    ? new URL(baseUrl) // 로컬일 땐 이미 querystring 포함
+    : new URL(baseUrl, window.location.origin);
 
-    const res = await fetch(url);
-    const data = await res.json();
-    console.log("응답 데이터 확인:", data);
+  // 페이지네이션 파라미터 추가
+  url.searchParams.set("page", page);
+  url.searchParams.set("pageSize", pageSize);
 
-    if (res.status === 200 && Array.isArray(data.articles)) {
-      if (data.articles.length === 0) {
-        throw new Error("No results for this search");
-      }
-      newsList = data.articles;
-      totalResults = data.totalResults;
-      render();
-      pagenationRender();
-    } else {
-      throw new Error(data.message || "Unknown error");
-    }
-  } catch (err) {
-    console.error("error메세지", err);
-    errorRender(err.message);
+  const res = await fetch(url);
+  const data = await (isLocal ? res.json() : res.json());
+  console.log("응답 데이터 확인:", data);
+
+  if (res.status === 200 && Array.isArray(data.articles)) {
+    if (!data.articles.length) throw new Error("No results");
+    newsList = data.articles;
+    totalResults = data.totalResults;
+    render();
+    pagenationRender();
+  } else {
+    throw new Error(data.message || "Unknown error");
   }
+} catch (err) {
+  console.error("error메세지", err);
+  errorRender(err.message);
 }
-
+}
 getNews();
 
 function render() {
@@ -51,7 +64,7 @@ function render() {
     <div class="row news-data">
       <div class="col-lg-4">
         <a class="urlImgTag" href="${item.url}" target="_blank">
-          <img class="thumbnails" src="${item.urlToImage || '/image/notlmage.png'}" />
+          <img class="thumbnails" src="${item.urlToImage || './image/notlmage.png'}" />
         </a>
       </div>
       <div class="col-lg-8 news-title">
