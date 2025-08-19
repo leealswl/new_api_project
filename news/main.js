@@ -1,5 +1,5 @@
 const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-const API_KEY = "dfa5549770ab47b7921b3ae0763768df";
+const API_KEY = process.env.NEWS_API_KEY;
 
 let newsList = [];
 let page = 1;
