@@ -27,10 +27,12 @@
 
 .thumbnails{
     width: 100%;
-    height: 200px;
+    height: 220px;
     margin-right: 1em;
     margin-bottom: 1em;
     text-align: center;
+    object-fit: cover; 
+    display:block;
 }
 
 .news-data{
