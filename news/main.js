@@ -36,29 +36,44 @@ async function getNews() {
   }
 }
 
+function escapeHTML(str = "") {
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
+
 function render() {
-  const newsHTML = newsList.map(item => `
-    <div class="row news-data g-4 align-items-start">
-      <div class="col-12 col-md-4">
-        <a class="urlImgTag d-block" href="${item.url}" target="_blank">
-          <img
-            class="thumbnails img-fluid"
-            loading="lazy"
-            src="${item.urlToImage || './image/notImage.png'}"
-            onerror="this.onerror=null;this.src='./image/notImage.png';"
-            alt=""
-          />
-        </a>
+  const newsHTML = newsList.map(item => {
+    const title   = escapeHTML(item.title || "No title");
+    const content = escapeHTML(
+      item.content
+        ? (item.content.length > 200 ? item.content.slice(0, 200) + "... Click" : item.content)
+        : "No content"
+    );
+    const source  = escapeHTML(item.source?.name || "No source");
+
+    return `
+      <div class="row news-data g-4 align-items-start">
+        <div class="col-12 col-md-4">
+          <a class="urlImgTag d-block" href="${item.url}" target="_blank" rel="noopener">
+            <img
+              class="thumbnails img-fluid"
+              loading="lazy"
+              src="${item.urlToImage || './image/notImage.png'}"
+              onerror="this.onerror=null;this.src='./image/notImage.png';"
+              alt=""
+            />
+          </a>
+        </div>
+        <div class="col-12 col-md-8 news-title">
+          <h2><a class="urlTag" href="${item.url}" target="_blank" rel="noopener">${title}</a></h2>
+          <p><a class="urlContentTag" href="${item.url}" target="_blank" rel="noopener">${content}</a></p>
+          <p class="news-meta">${source} ċ ${item.publishedAt ? moment(item.publishedAt).fromNow() : ""}</p>
+        </div>
       </div>
-      <div class="col-12 col-md-8 news-title">
-        <h2><a class="urlTag" href="${item.url}" target="_blank">${item.title || "No title"}</a></h2>
-        <p><a class="urlContentTag" href="${item.url}" target="_blank">
-          ${item.content ? (item.content.length > 200 ? item.content.slice(0, 200) + "... Click" : item.content) : "No content"}
-        </a></p>
-        <p class="news-meta">${item.source.name || "No source"} ċ ${moment(item.publishedAt).fromNow()}</p>
-      </div>
-    </div>
-  `).join("");
+    `;
+  }).join("");
+
   document.getElementById("news-board").innerHTML = newsHTML;
 }
 

@@ -127,3 +127,5 @@
      }
   }
 
+#news-board .row.news-data { display:flex; flex-wrap:wrap; }
+#news-board .row.news-data > [class*="col-"] { box-sizing:border-box; }
